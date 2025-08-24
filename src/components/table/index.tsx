@@ -35,6 +35,7 @@ import {
   ColumnFiltersState,
 } from "@tanstack/react-table";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
+import { Skeleton } from "../ui/skeleton";
 
 type Person = {
   name: { first: string; last: string };
@@ -265,12 +266,11 @@ export function CustomTable({
               ))
             ) : (
               <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center"
-                >
-                  Loading persons...
+                {columns.map((cell) => (
+                  <TableCell key={`skeleton-${cell.id}`}>
+                    <Skeleton className="h-10 w-full" />
                 </TableCell>
+                ))}
               </TableRow>
             )}
           </TableBody>
