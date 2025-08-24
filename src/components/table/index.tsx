@@ -102,6 +102,7 @@ export function CustomTable({ data, pageSize = 10 }: PersonTableProps) {
         ),
       },
       {
+        id: "email",
         accessorKey: "email",
         header: ({ column }) => (
           <Button
@@ -117,6 +118,7 @@ export function CustomTable({ data, pageSize = 10 }: PersonTableProps) {
         ),
       },
       {
+        id: "phone",
         accessorKey: "phone",
         header: ({ column }) => (
           <Button
