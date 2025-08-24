@@ -9,7 +9,6 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Checkbox } from "@/components/ui/checkbox";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -17,8 +16,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
+  ArrowDownAZ,
   ArrowLeft,
   ArrowRight,
+  ArrowUpAZ,
   ArrowUpDown,
   MoreHorizontal,
 } from "lucide-react";
@@ -54,34 +55,6 @@ export function CustomTable({ data, pageSize = 10 }: PersonTableProps) {
   const columns = React.useMemo<ColumnDef<Person>[]>(
     () => [
       {
-        id: "select",
-        header: ({ table }) => (
-          <div className="w-full flex items-center justify-center">
-            <Checkbox
-              checked={
-                table.getIsAllPageRowsSelected() ||
-                (table.getIsSomePageRowsSelected() && "indeterminate")
-              }
-              onCheckedChange={(value) =>
-                table.toggleAllPageRowsSelected(!!value)
-              }
-              aria-label="Select all"
-            />
-          </div>
-        ),
-        cell: ({ row }) => (
-          <div className="w-full flex items-center justify-center">
-            <Checkbox
-              checked={row.getIsSelected()}
-              onCheckedChange={(value) => row.toggleSelected(!!value)}
-              aria-label="Select row"
-            />
-          </div>
-        ),
-        enableSorting: false,
-        enableHiding: false,
-      },
-      {
         id: "avatar",
         header: "Avatar",
         cell: ({ row }) => (
@@ -93,8 +66,24 @@ export function CustomTable({ data, pageSize = 10 }: PersonTableProps) {
         enableHiding: false,
       },
       {
+        id: "name",
         accessorKey: "name",
-        header: "Nombre",
+        accessorFn: (row) => `${row.name.first} ${row.name.last}`,
+        header: ({ column }) => (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            Nombre
+            {column.getIsSorted() === "asc" ? (
+              <ArrowUpAZ className="ml-2 h-4 w-4" />
+            ) : column.getIsSorted() === "desc" ? (
+              <ArrowDownAZ className="ml-2 h-4 w-4" />
+            ) : (
+              <ArrowUpDown className="ml-2 h-4 w-4" />
+            )}
+          </Button>
+        ),
         cell: ({ row }) => (
           <div>
             {row.original.name.first} {row.original.name.last}
@@ -110,7 +99,13 @@ export function CustomTable({ data, pageSize = 10 }: PersonTableProps) {
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           >
             Email
-            <ArrowUpDown className="ml-2 h-4 w-4" />
+            {column.getIsSorted() === "asc" ? (
+              <ArrowUpAZ className="ml-2 h-4 w-4" />
+            ) : column.getIsSorted() === "desc" ? (
+              <ArrowDownAZ className="ml-2 h-4 w-4" />
+            ) : (
+              <ArrowUpDown className="ml-2 h-4 w-4" />
+            )}
           </Button>
         ),
         cell: ({ row }) => (
@@ -120,15 +115,7 @@ export function CustomTable({ data, pageSize = 10 }: PersonTableProps) {
       {
         id: "phone",
         accessorKey: "phone",
-        header: ({ column }) => (
-          <Button
-            variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          >
-            Teléfono
-            <ArrowUpDown className="ml-2 h-4 w-4" />
-          </Button>
-        ),
+        header: "Teléfono",
         cell: ({ row }) => <div className="lowercase">{row.original.cell}</div>,
       },
       {
@@ -194,16 +181,16 @@ export function CustomTable({ data, pageSize = 10 }: PersonTableProps) {
 
   return (
     <div className="w-full max-w-5xl">
-      <div className="flex flex-col md:flex-row justify-between pb-2 pt-6 items-center gap-2">
+      <div className="flex flex-row justify-between pb-2 pt-6 items-center gap-2">
         <Input
           placeholder="Buscar email"
           value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
             table.getColumn("email")?.setFilterValue(event.target.value)
           }
-          className="max-w-sm"
+          className="max-w-sm flex-1 flex-grow"
         />
-        <div className="justify-end ml-4 flex">
+        <div className="flex w-fit">
           <div className="flex items-center space-x-2">
             <Button
               variant="outline"
@@ -211,7 +198,7 @@ export function CustomTable({ data, pageSize = 10 }: PersonTableProps) {
               onClick={() => table.previousPage()}
               disabled={!table.getCanPreviousPage()}
             >
-              <ArrowLeft className="mr-2 h-4 w-4" /> Anterior
+              <ArrowLeft />
             </Button>
             <Button
               variant="outline"
@@ -219,7 +206,7 @@ export function CustomTable({ data, pageSize = 10 }: PersonTableProps) {
               onClick={() => table.nextPage()}
               disabled={!table.getCanNextPage()}
             >
-              Siguiente <ArrowRight className="mr-2 h-4 w-4" />
+              <ArrowRight />
             </Button>
           </div>
         </div>
@@ -273,14 +260,7 @@ export function CustomTable({ data, pageSize = 10 }: PersonTableProps) {
       </div>
       <div className="flex items-center justify-end space-x-2 py-4">
         <div className="text-muted-foreground flex-1 text-sm pl-4">
-          {table.getFilteredSelectedRowModel().rows.length} of{" "}
-          {table.getFilteredRowModel().rows.length} seleccionados.
-        </div>
-        <div>
-          {" "}
-          <div className="text-muted-foreground flex-1 text-sm pl-4">
-            {`página ${pagination.pageIndex} de ${table.getPageCount()}`}
-          </div>
+          {`página ${pagination.pageIndex} de ${table.getPageCount()}`}
         </div>
         <div className="flex items-center space-x-2">
           <Button
