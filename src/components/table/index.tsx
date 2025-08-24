@@ -264,7 +264,7 @@ export function CustomTable({ data, pageSize = 10 }: PersonTableProps) {
                 {columns.map((cell) => (
                   <TableCell key={`skeleton-${cell.id}`}>
                     <Skeleton className="h-10 w-full" />
-                </TableCell>
+                  </TableCell>
                 ))}
               </TableRow>
             )}
