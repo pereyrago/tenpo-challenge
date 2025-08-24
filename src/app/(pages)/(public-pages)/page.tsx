@@ -9,7 +9,7 @@ export default function Home() {
       <div className="h-full flex grow flex-1 relative">
         <Image
           src="/images/card.png"
-          alt="Tenpo Logo"
+          alt="Tenpo card"
           width={300}
           height={300}
           className={`m-auto z-10 ${s.card}`}
