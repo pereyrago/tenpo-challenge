@@ -8,7 +8,7 @@ export default function Home() {
     <div className={"mx-auto flex flex-row h-screen items-center"}>
       <div className="h-full flex grow flex-1 relative">
         <Image
-          src="/card.png"
+          src="/images/card.png"
           alt="Tenpo Logo"
           width={300}
           height={300}
