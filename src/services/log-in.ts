@@ -1,3 +1,4 @@
+import PATHS from "@/constants/paths";
 import { api } from "./api";
 
 export type LoginResponse = {
@@ -11,7 +12,7 @@ export async function login(
   password: string
 ): Promise<LoginResponse> {
   // en el challenge podés devolver un token fake con un delay simulado
-  const response = await api.post<LoginResponse>("/login", {
+  const response = await api.post<LoginResponse>(PATHS.LOGIN, {
     email,
     password,
   });
