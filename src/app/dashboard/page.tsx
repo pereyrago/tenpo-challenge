@@ -2,16 +2,13 @@
 import { useEffect } from "react";
 import usePerson from "@/store/list";
 import useSession from "@/store/session";
-import { Button } from "@/components/ui/button";
-import { LogOut } from "lucide-react";
 import * as React from "react";
 import { CustomTable } from "@/components/table";
-import Image from "next/image";
-import ThemeToggle from "@/components/theme-switcher";
+import { AvatarImage, Avatar, AvatarFallback } from "@/components/ui/avatar";
+import UserMenu from "@/components/userMenu";
 
 export default function DashboardPage() {
   const session = useSession();
-  const { logout } = session;
   const { fetchPersons, persons } = usePerson();
 
   useEffect(() => {
@@ -19,21 +16,21 @@ export default function DashboardPage() {
   }, []);
 
   return (
-    <div className="w-full h-full flex justify-center items-center flex-col pt-4">
-      <div className="w-5xl flex items-center justify-between flex-row">
+    <div className="container w-full h-full flex justify-center items-center flex-col p-2 pt-4 mx-auto">
+      <div className="w-5xl max-w-full flex items-center justify-between flex-row">
         <div className="flex items-center">
-          <Image
-            src="/images/logo.svg"
-            alt="Tenpo Logo"
-            width={137}
-            height={46}
-            className="mx-auto mb-4"
-          />
+          <Avatar>
+            <AvatarImage src="/images/mini-logo.jpg" alt="Tenpo logo" />
+          </Avatar>
         </div>
-        <ThemeToggle />
-        <Button size={"sm"} variant={"outline"} onClick={logout}>
-          <LogOut className="mr-2 h-4 w-4" /> Cerrar sesión
-        </Button>
+
+        <UserMenu>
+          <Avatar>
+            <AvatarFallback className="bg-gradient-to-br from-blue-400 to-orange-400 text-white">
+              {session.email?.slice(0, 2).toUpperCase()}
+            </AvatarFallback>
+          </Avatar>
+        </UserMenu>
       </div>
       <CustomTable data={persons || []} pageSize={20} />
     </div>
