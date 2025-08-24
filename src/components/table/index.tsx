@@ -33,6 +33,7 @@ import {
   useReactTable,
   VisibilityState,
   ColumnFiltersState,
+  PaginationState,
 } from "@tanstack/react-table";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Skeleton } from "../ui/skeleton";
@@ -173,6 +174,10 @@ export function CustomTable({
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
+  const [pagination, setPagination] = React.useState<PaginationState>({
+    pageIndex: 0,
+    pageSize,
+  });
 
   const table = useReactTable({
     data: data || [],
@@ -184,16 +189,14 @@ export function CustomTable({
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
+    onPaginationChange: setPagination,
     onRowSelectionChange: setRowSelection,
     state: {
       sorting,
       columnFilters,
       columnVisibility,
       rowSelection,
-      pagination: {
-        pageSize,
-        pageIndex: page - 1,
-      },
+      pagination,
     },
   });
 
@@ -213,7 +216,7 @@ export function CustomTable({
             <Button
               variant="outline"
               size="sm"
-              onClick={onPrevPage}
+              onClick={() => table.previousPage()}
               disabled={!table.getCanPreviousPage()}
             >
               <ArrowLeft className="mr-2 h-4 w-4" /> Anterior
@@ -221,7 +224,7 @@ export function CustomTable({
             <Button
               variant="outline"
               size="sm"
-              onClick={onNextPage}
+              onClick={() => table.nextPage()}
               disabled={!table.getCanNextPage()}
             >
               Siguiente <ArrowRight className="mr-2 h-4 w-4" />
@@ -279,13 +282,19 @@ export function CustomTable({
       <div className="flex items-center justify-end space-x-2 py-4">
         <div className="text-muted-foreground flex-1 text-sm pl-4">
           {table.getFilteredSelectedRowModel().rows.length} of{" "}
-          {table.getFilteredRowModel().rows.length} row(s) selected.
+          {table.getFilteredRowModel().rows.length} seleccionados.
+        </div>
+        <div>
+          {" "}
+          <div className="text-muted-foreground flex-1 text-sm pl-4">
+            {`página ${pagination.pageIndex} de ${table.getPageCount()}`}
+          </div>
         </div>
         <div className="flex items-center space-x-2">
           <Button
             variant="outline"
             size="sm"
-            onClick={onPrevPage}
+            onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
           >
             <ArrowLeft />
@@ -293,7 +302,7 @@ export function CustomTable({
           <Button
             variant="outline"
             size="sm"
-            onClick={onNextPage}
+            onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
           >
             <ArrowRight />
