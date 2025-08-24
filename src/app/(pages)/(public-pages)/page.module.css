@@ -1,0 +1,15 @@
+@keyframes float {
+  0% {
+    transform: translatey(0px);
+  }
+  50% {
+    transform: translatey(-1rem);
+  }
+  100% {
+    transform: translatey(0px);
+  }
+}
+.card {
+  animation: float 3s ease-in-out infinite;
+  filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.3));
+}
