@@ -47,20 +47,10 @@ type Person = {
 
 interface PersonTableProps {
   data: Person[];
-  page: number;
-  onNextPage: () => void;
-  onPrevPage: () => void;
   pageSize?: number;
-  setPageSize?: (size: number) => void;
 }
 
-export function CustomTable({
-  data,
-  page,
-  onNextPage,
-  onPrevPage,
-  pageSize = 10,
-}: PersonTableProps) {
+export function CustomTable({ data, pageSize = 10 }: PersonTableProps) {
   const columns = React.useMemo<ColumnDef<Person>[]>(
     () => [
       {
