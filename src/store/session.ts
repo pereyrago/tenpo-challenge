@@ -1,7 +1,10 @@
 import PATHS from "@/constants/paths";
+import { STORAGE_SESSION_KEY } from "@/lib/constants";
+import { Persons } from "@/schemas/persons";
 import { Role } from "@/schemas/session";
 import { api } from "@/services/api";
 import { LoginResponse } from "@/services/log-in";
+import { fetchPersons, PersonsError } from "@/services/persons";
 import { redirect } from "next/navigation";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
@@ -12,6 +15,8 @@ interface SessionState {
   token: string | null;
   role: Role;
   email?: string;
+  persons: Persons["results"] | null;
+  fetchPersons: (page: number) => Promise<void>;
 }
 
 const useSession = create<SessionState>()(
@@ -30,10 +35,24 @@ const useSession = create<SessionState>()(
           return redirect("/");
         });
       },
+      persons: null,
+      fetchPersons: async (page: number) => {
+        try {
+          const results = await fetchPersons(page);
+          set({ persons: results });
+        } catch (error) {
+          set({ persons: null });
+          if (error instanceof PersonsError) {
+            console.error(error.message);
+          } else {
+            console.error("Error desconocido al obtener personas.");
+          }
+        }
+      },
     }),
 
     {
-      name: "session-storage",
+      name: STORAGE_SESSION_KEY,
     }
   )
 );
