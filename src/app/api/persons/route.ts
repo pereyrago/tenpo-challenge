@@ -35,13 +35,20 @@ export async function GET(request: Request) {
       return new Response(
         JSON.stringify({ error: "Failed to fetch persons" }),
         {
-          status: 500,
-          statusText: "Internal Server Error",
+          status: error.response?.status,
+          statusText: error.response?.statusText,
           headers: {
             "Content-Type": "application/json",
           },
         }
       );
     }
+    return new Response(JSON.stringify({ error: "server error" }), {
+      status: 500,
+      statusText: "Internal Server Error",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
   }
 }
