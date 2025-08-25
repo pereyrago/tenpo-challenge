@@ -1,4 +1,4 @@
-import Login from "@/components/forms/Login";
+import Login from "@/components/business/Login";
 import { FlickeringGrid } from "@/components/ui/shadcn-io/flickering-grid";
 import Image from "next/image";
 import s from "./page.module.css";
