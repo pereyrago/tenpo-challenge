@@ -1,3 +1,4 @@
+"use client";
 import {
   Popover,
   PopoverContent,
@@ -8,12 +9,19 @@ import { LogOut } from "lucide-react";
 import useSession from "@/store/session";
 import ThemeToggle from "../theme-switcher";
 import { Separator } from "@radix-ui/react-dropdown-menu";
+import { Avatar, AvatarFallback } from "../ui/avatar";
 
-export default function UserMenu({ children }: { children: React.ReactNode }) {
+export default function UserMenu() {
   const { logout, email } = useSession();
   return (
     <Popover>
-      <PopoverTrigger asChild>{children}</PopoverTrigger>
+      <PopoverTrigger asChild>
+        <Avatar>
+          <AvatarFallback className="bg-gradient-to-br from-blue-400 to-orange-400 text-white">
+            {email?.slice(0, 2).toUpperCase()}
+          </AvatarFallback>
+        </Avatar>
+      </PopoverTrigger>
       <PopoverContent className="w-fit" align="end">
         <>
           <h3>{email}</h3>
