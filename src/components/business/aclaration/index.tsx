@@ -1,6 +1,6 @@
 export default function Aclaration() {
   return (
-    <p className="text-gray-600 text-sm bg-white p-2 rounded">
+    <p className="text-gray-600 text-sm bg-background p-2 rounded text-center">
       Challenge técnico para{" "}
       <a
         href="https://www.tektonlabs.com/"
