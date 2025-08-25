@@ -6,7 +6,7 @@ import s from "../page.module.css";
 export default function Home() {
   return (
     <div className={"mx-auto flex flex-row h-screen items-center"}>
-      <div className="h-full flex grow flex-1 relative">
+      <div className="h-full sm:flex hidden grow flex-1 relative">
         <Image
           src="/images/card.png"
           alt="Tenpo Logo"
