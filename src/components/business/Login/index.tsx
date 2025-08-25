@@ -80,7 +80,7 @@ const Login = () => {
       <Button
         type="submit"
         className="px-4 w-full mt-2 text-secondary"
-        disabled={!formState.email || !formState.password || formState.loading}
+        disabled={formState.loading || !formState.email || !formState.password}
       >
         Entrar
       </Button>
