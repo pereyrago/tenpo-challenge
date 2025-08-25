@@ -1,3 +1,4 @@
+import PATHS from "@/constants/paths";
 import { Role } from "@/schemas/session";
 import { api } from "@/services/api";
 import { LoginResponse } from "@/services/log-in";
@@ -21,7 +22,7 @@ const useSession = create<SessionState>()(
       email: undefined,
       login: ({ token, role, email }) => {
         set({ token, role, email });
-        return redirect("/dashboard");
+        return redirect(PATHS.LIST);
       },
       logout: () => {
         api.get("/logout").then(() => {

@@ -5,7 +5,7 @@ export const PUBLIC_PATHS = {
 } as const;
 
 export const PROTECTED_PATHS = {
-  DASHBOARD: "/dashboard",
+  LIST: "/app/list",
 } as const;
 
 export const API_PATHS = {
