@@ -41,7 +41,6 @@ export const useLogin = () => {
         setFormState((prev) => ({
           ...prev,
           errors: err.issues.map((issue) => issue.message),
-          loading: false,
         }));
       } else {
         setFormState((prev) => ({
@@ -52,11 +51,6 @@ export const useLogin = () => {
       return;
     }
 
-    setFormState((prev) => ({
-      ...prev,
-      loading: false,
-    }));
-
     login(formState.email, formState.password).then((res) => {
       session.login(res);
     });
@@ -66,6 +60,7 @@ export const useLogin = () => {
     const { name, value } = e.target;
     setFormState((prev) => ({
       ...prev,
+      loading: false,
       [name]: value,
     }));
   };
