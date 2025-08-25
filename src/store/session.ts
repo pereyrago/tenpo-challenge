@@ -31,7 +31,7 @@ const useSession = create<SessionState>()(
       },
       logout: () => {
         api.get("/logout").then(() => {
-          set({ token: null, role: "guest", email: undefined });
+          set({ token: null, role: "guest", email: undefined, persons: null });
           return redirect("/");
         });
       },
