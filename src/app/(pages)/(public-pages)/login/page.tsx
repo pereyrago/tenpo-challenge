@@ -1,12 +1,13 @@
-import Login from "@/components/forms/Login";
+import Login from "@/components/business/Login";
 import { FlickeringGrid } from "@/components/ui/shadcn-io/flickering-grid";
 import Image from "next/image";
 import s from "../page.module.css";
+import Aclaration from "@/components/business/aclaration";
 
 export default function Home() {
   return (
     <div className={"mx-auto flex flex-row h-screen items-center"}>
-      <div className="h-full sm:flex hidden grow flex-1 relative">
+      <aside className="h-full sm:flex hidden grow flex-1 relative">
         <Image
           src="/images/card.png"
           alt="Tenpo Logo"
@@ -22,43 +23,13 @@ export default function Home() {
           color="rgb(100, 100, 100)"
           maxOpacity={0.25}
         />
-        <p className="absolute bottom-4 left-4 text-gray-600 text-sm bg-white p-2 rounded">
-          Challenge técnico para{" "}
-          <a
-            href="https://www.tektonlabs.com/"
-            rel="noreferrer noopenner"
-            target="_blank"
-          >
-            Tekton labs
-          </a>{" "}
-          /{" "}
-          <a
-            href="https://www.tenpo.cl/"
-            rel="noreferrer noopenner"
-            target="_blank"
-          >
-            Tenpo
-          </a>
-          , hecho por{" "}
-          <a
-            href="https://www.linkedin.com/in/gabi-pereyra/"
-            target="_blank"
-            rel="noreferrer noopenner"
-          >
-            Gabriel Pereyra
-          </a>{" "}
-          <a
-            href="https://pereyrago.dev/"
-            target="_blank"
-            rel="noreferrer noopenner"
-          >
-            pereyrago.dev
-          </a>
-        </p>
-      </div>
-      <div className="sm:w-fit w-screen flex justify-center shadow-2xl h-screen items-center">
+        <div className="absolute bottom-4 left-4">
+          <Aclaration />
+        </div>
+      </aside>
+      <main className="sm:w-fit w-screen flex justify-center shadow-2xl h-screen items-center">
         <Login />
-      </div>
+      </main>
     </div>
   );
 }
