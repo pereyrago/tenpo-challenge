@@ -10,18 +10,11 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
   ArrowDownAZ,
   ArrowLeft,
   ArrowRight,
   ArrowUpAZ,
   ArrowUpDown,
-  MoreHorizontal,
 } from "lucide-react";
 import {
   ColumnDef,
@@ -56,11 +49,13 @@ export function CustomTable({ data, pageSize = 10 }: PersonTableProps) {
     () => [
       {
         id: "avatar",
-        header: "Avatar",
+        header: () => <div className="grid place-items-center">Avatar</div>,
         cell: ({ row }) => (
-          <Avatar>
-            <AvatarImage src={row.original.picture.thumbnail} alt="Avatar" />
-          </Avatar>
+          <div className="grid place-items-center">
+            <Avatar className="self-center">
+              <AvatarImage src={row.original.picture.thumbnail} alt="Avatar" />
+            </Avatar>
+          </div>
         ),
         enableSorting: false,
         enableHiding: false,
@@ -117,30 +112,6 @@ export function CustomTable({ data, pageSize = 10 }: PersonTableProps) {
         accessorKey: "phone",
         header: "Teléfono",
         cell: ({ row }) => <div className="lowercase">{row.original.cell}</div>,
-      },
-      {
-        id: "actions",
-        enableHiding: false,
-        cell: ({ row }) => {
-          const person = row.original;
-          return (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="h-8 w-8 p-0">
-                  <span className="sr-only">Open menu</span>
-                  <MoreHorizontal />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem
-                  onClick={() => navigator.clipboard.writeText(person.email)}
-                >
-                  <div className="text-center">Copiar Email</div>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          );
-        },
       },
     ],
     []
