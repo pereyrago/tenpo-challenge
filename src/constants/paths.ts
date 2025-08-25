@@ -8,10 +8,13 @@ export const PROTECTED_PATHS = {
   LIST: "/app/list",
 } as const;
 
+/* 
+axios object already had /api prefix 
+*/
 export const API_PATHS = {
-  LOGIN: "/api/auth/login",
-  LOGOUT: "/api/auth/logout",
-  PERSONS: "/api/persons",
+  LOGIN: "/login",
+  LOGOUT: "/logout",
+  PERSONS: "/persons",
 } as const;
 
 export type ProtectedPath =
