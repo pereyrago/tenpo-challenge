@@ -60,6 +60,7 @@ Puedes encontrarlas en el archivo `.env.example` en la raíz del proyecto. Solo 
 - El proyecto utiliza rutas públicas y privadas. Las privadas requieren autenticación (token en localStorage).
 - El tema visual (light/dark/system) se gestiona y persiste automáticamente.
 - El código está tipado y validado con TypeScript y ESLint.
+- Se agregó como adicional tests para el componente Login los mismos se pueden ejecutar corriendo el comando `pnpm jest`
 
 ## Contacto
 
