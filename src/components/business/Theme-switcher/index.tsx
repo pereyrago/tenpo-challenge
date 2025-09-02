@@ -7,13 +7,6 @@ const ThemeToggle = () => {
 
   const handleThemeChange = (newTheme: "light" | "dark" | "system") => {
     setTheme(newTheme);
-    localStorage.setItem("data-theme", newTheme);
-    document.documentElement.classList.toggle(
-      "dark",
-      newTheme === "dark" ||
-        (newTheme === "system" &&
-          window.matchMedia("(prefers-color-scheme: dark)").matches)
-    );
   };
 
   return (
