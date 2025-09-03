@@ -5,6 +5,14 @@ import "@testing-library/jest-dom";
 import Login from "./index";
 import { PASSWORD_ERROR_CASES } from "@/schemas/login";
 
+jest.mock("next/navigation", () => ({
+  useRouter: () => ({
+    replace: jest.fn(),
+    push: jest.fn(),
+    prefetch: jest.fn(),
+  }),
+}));
+
 describe("Login Page", () => {
   beforeEach(() => {
     render(<Login />);
@@ -60,7 +68,7 @@ describe("Login Page", () => {
         screen.queryByText(PASSWORD_ERROR_CASES.special)
       ).not.toBeInTheDocument();
     });
-    it("Si ingreso mal la contraseña semostrarán errores en pantalla", async () => {
+    it("Si ingreso mal la contraseña se mostrarán errores en pantalla", async () => {
       const emailInput = screen.getByPlaceholderText("Email");
       await userEvent.type(emailInput, "test@mail.com");
 
