@@ -1,18 +1,16 @@
 "use client";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import useSession from "@/store/session";
 import { Separator } from "@radix-ui/react-dropdown-menu";
 import ThemeToggle from "../Theme-switcher";
 import { Button } from "@/components/ui/button";
 import { LogOut } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export default function UserMenu() {
   const { logout, email } = useSession();
+  const router = useRouter();
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -28,7 +26,15 @@ export default function UserMenu() {
           <Separator className="my-2" />
           <ThemeToggle />
           <Separator className="my-4" />
-          <Button variant={"outline"} className="w-full" onClick={logout}>
+          <Button
+            variant={"outline"}
+            className="w-full"
+            aria-label="Cerrar sesión"
+            onClick={async () => {
+              await logout();
+              router.replace("/");
+            }}
+          >
             <LogOut className="mr-2 h-4 w-4" /> Cerrar sesión
           </Button>
         </>
