@@ -1,5 +1,3 @@
-import { AxiosError } from "axios";
-
 export async function GET(request: Request) {
   const params = new URL(request.url).searchParams;
   const EXTERNAL_API_URL = process.env.EXTERNAL_API_URL;
@@ -21,6 +19,16 @@ export async function GET(request: Request) {
       ","
     )}`;
     const response = await fetch(apiUrl);
+    if (!response.ok) {
+      return new Response(
+        JSON.stringify({ error: "Failed to fetch persons" }),
+        {
+          status: response.status,
+          statusText: response.statusText,
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+    }
     const data = await response.json();
 
     return new Response(JSON.stringify(data), {
@@ -31,18 +39,6 @@ export async function GET(request: Request) {
       },
     });
   } catch (error) {
-    if (error instanceof AxiosError) {
-      return new Response(
-        JSON.stringify({ error: "Failed to fetch persons" }),
-        {
-          status: error.response?.status,
-          statusText: error.response?.statusText,
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-    }
     return new Response(JSON.stringify({ error: "server error" }), {
       status: 500,
       statusText: "Internal Server Error",

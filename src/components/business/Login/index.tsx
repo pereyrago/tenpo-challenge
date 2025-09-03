@@ -14,6 +14,7 @@ const Login = () => {
     <form
       onSubmit={handleSubmit}
       className="flex flex-col gap-4 w-md max-w-sm h-fit px-4"
+      aria-label="Formulario de inicio de sesión"
     >
       <Image
         src="/images/logo.svg"
@@ -29,6 +30,7 @@ const Login = () => {
             type="email"
             name="email"
             placeholder="Email"
+            aria-label="Email"
             className="pl-10"
             value={formState.email}
             onChange={handleChange}
@@ -42,6 +44,7 @@ const Login = () => {
           type={formState.showPassword ? "text" : "password"}
           name="password"
           placeholder="Contraseña"
+          aria-label="Contraseña"
           className="pl-10"
           value={formState.password}
           onChange={handleChange}
@@ -67,7 +70,7 @@ const Login = () => {
           variant="link"
           className="text-xs self-end text-foreground"
         >
-          Registrate
+          Regístrate
         </Button>
         <Button
           type="button"
@@ -84,7 +87,7 @@ const Login = () => {
       >
         Entrar
       </Button>
-      <div className="h-[4rem]">
+      <div className="h-[4rem]" aria-live="polite" role="status">
         {formState.errors.length > 0 &&
           formState.errors.map((message, i) => (
             <div key={i} className="text-red-500 text-xs">

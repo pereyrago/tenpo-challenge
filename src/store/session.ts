@@ -5,13 +5,12 @@ import { Role } from "@/schemas/session";
 import { api } from "@/services/api";
 import { LoginResponse } from "@/services/log-in";
 import { fetchPersons, PersonsError } from "@/services/persons";
-import { redirect } from "next/navigation";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
 interface SessionState {
   login: (payload: LoginResponse) => void;
-  logout: () => void;
+  logout: () => Promise<void>;
   token: string | null;
   role: Role;
   email?: string;
@@ -21,19 +20,16 @@ interface SessionState {
 
 const useSession = create<SessionState>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       role: "guest",
       token: null,
       email: undefined,
       login: ({ token, role, email }) => {
         set({ token, role, email });
-        return redirect(PATHS.LIST);
       },
-      logout: () => {
-        api.get("/logout").then(() => {
-          set({ token: null, role: "guest", email: undefined, persons: null });
-          return redirect("/");
-        });
+      logout: async () => {
+        await api.get("/logout");
+        set({ token: null, role: "guest", email: undefined, persons: null });
       },
       persons: null,
       fetchPersons: async (page: number) => {
@@ -43,6 +39,10 @@ const useSession = create<SessionState>()(
         } catch (error) {
           set({ persons: null });
           if (error instanceof PersonsError) {
+            if (error.status === 498) {
+              await get().logout();
+              return;
+            }
             console.error(error.message);
           } else {
             console.error("Error desconocido al obtener personas.");

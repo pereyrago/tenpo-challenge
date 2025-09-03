@@ -3,6 +3,8 @@ import * as z from "zod";
 import { loginSchema } from "@/schemas/login";
 import { login } from "@/services/log-in";
 import useSession from "@/store/session";
+import { useRouter } from "next/navigation";
+import PATHS from "@/constants/paths";
 
 export type FormState = {
   email: string;
@@ -23,8 +25,9 @@ const initialState: FormState = {
 export const useLogin = () => {
   const [formState, setFormState] = useState<FormState>(initialState);
   const session = useSession();
+  const router = useRouter();
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       loginSchema.parse({
@@ -51,9 +54,17 @@ export const useLogin = () => {
       return;
     }
 
-    login(formState.email, formState.password).then((res) => {
+    try {
+      const res = await login(formState.email, formState.password);
       session.login(res);
-    });
+      router.replace(PATHS.LIST);
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "Ocurrió un error inesperado.";
+      setFormState((prev) => ({ ...prev, errors: [message] }));
+    } finally {
+      setFormState((prev) => ({ ...prev, loading: false }));
+    }
   };
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -80,3 +91,4 @@ export const useLogin = () => {
     toggleShowPassword,
   };
 };
+
