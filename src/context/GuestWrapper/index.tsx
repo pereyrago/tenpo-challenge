@@ -4,12 +4,12 @@ import { useRouter } from "next/navigation";
 import PATHS from "@/constants/paths";
 import { STORAGE_SESSION_KEY } from "@/lib/constants";
 
-interface AuthWrapperProps {
+interface GuestWrapperProps {
   children: ReactNode;
   fallback?: ReactNode;
 }
 
-const AuthWrapper: React.FC<AuthWrapperProps> = ({
+const GuestWrapper: React.FC<GuestWrapperProps> = ({
   children,
   fallback = null,
 }) => {
@@ -17,28 +17,23 @@ const AuthWrapper: React.FC<AuthWrapperProps> = ({
   const [checking, setChecking] = useState(true);
 
   useEffect(() => {
-    const sessionRaw = localStorage.getItem(STORAGE_SESSION_KEY);
-    let isAuthenticated = false;
-
-    if (sessionRaw) {
-      try {
-        const session = JSON.parse(sessionRaw);
-        isAuthenticated = !!session?.state?.token;
-      } catch {
-        isAuthenticated = false;
+    try {
+      const sessionRaw = localStorage.getItem(STORAGE_SESSION_KEY);
+      const session = sessionRaw ? JSON.parse(sessionRaw) : null;
+      const token = session?.state?.token;
+      if (token) {
+        //validate token with sv
+        router.replace(PATHS.LIST);
+        return;
       }
+    } catch {
+      console.error("someti");
     }
-
-    if (!isAuthenticated) {
-      router.replace(PATHS.HOME);
-    } else {
-      setChecking(false);
-    }
+    setChecking(false);
   }, [router]);
 
   if (checking) return fallback;
-
   return <>{children}</>;
 };
 
-export default AuthWrapper;
+export default GuestWrapper;

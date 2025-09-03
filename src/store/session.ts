@@ -20,7 +20,7 @@ interface SessionState {
 
 const useSession = create<SessionState>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       role: "guest",
       token: null,
       email: undefined,
@@ -39,6 +39,10 @@ const useSession = create<SessionState>()(
         } catch (error) {
           set({ persons: null });
           if (error instanceof PersonsError) {
+            if (error.status === 498) {
+              await get().logout();
+              return;
+            }
             console.error(error.message);
           } else {
             console.error("Error desconocido al obtener personas.");
