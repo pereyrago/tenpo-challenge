@@ -1,7 +1,6 @@
 "use client";
 import React, { ReactNode, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { redirect } from "next/navigation";
 import PATHS from "@/constants/paths";
 import { STORAGE_SESSION_KEY } from "@/lib/constants";
 
@@ -31,7 +30,7 @@ const AuthWrapper: React.FC<AuthWrapperProps> = ({
     }
 
     if (!isAuthenticated) {
-      redirect(PATHS.LOGIN);
+      router.replace(PATHS.LOGIN);
     } else {
       setChecking(false);
     }

@@ -6,11 +6,17 @@ export const api = axios.create({
 });
 
 api.interceptors.request.use((config) => {
-  const sessionRaw = localStorage.getItem(STORAGE_SESSION_KEY);
-  const session = JSON.parse(String(sessionRaw));
-  const token = session?.state?.token;
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
+  try {
+    if (typeof window !== "undefined") {
+      const sessionRaw = window.localStorage.getItem(STORAGE_SESSION_KEY);
+      if (sessionRaw) {
+        const session = JSON.parse(sessionRaw);
+        const token = session?.state?.token;
+        if (token) {
+          config.headers.Authorization = `Bearer ${token}`;
+        }
+      }
+    }
+  } catch {}
   return config;
 });

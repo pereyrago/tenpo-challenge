@@ -5,7 +5,6 @@ import { Role } from "@/schemas/session";
 import { api } from "@/services/api";
 import { LoginResponse } from "@/services/log-in";
 import { fetchPersons, PersonsError } from "@/services/persons";
-import { redirect } from "next/navigation";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
@@ -27,12 +26,18 @@ const useSession = create<SessionState>()(
       email: undefined,
       login: ({ token, role, email }) => {
         set({ token, role, email });
-        return redirect(PATHS.LIST);
+        if (typeof window !== "undefined") {
+          window.location.assign(PATHS.LIST);
+        }
+        return;
       },
       logout: () => {
         api.get("/logout").then(() => {
           set({ token: null, role: "guest", email: undefined, persons: null });
-          return redirect("/");
+          if (typeof window !== "undefined") {
+            window.location.assign("/");
+          }
+          return;
         });
       },
       persons: null,
