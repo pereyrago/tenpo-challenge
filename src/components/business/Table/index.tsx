@@ -182,7 +182,7 @@ export function CustomTable({ data, pageSize = 10 }: PersonTableProps) {
           </div>
         </div>
       </div>
-      <div className="overflow-hidden rounded-md border">
+      <div className="overflow-hidden rounded-md border mt-2">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
