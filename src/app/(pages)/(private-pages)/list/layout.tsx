@@ -17,7 +17,7 @@ export default function PrivateLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <div className="container w-full h-full flex justify-center items-center flex-col px-3 mx-auto">
+    <div className="container w-full min-h-screen flex justify-center items-center flex-col px-3 mx-auto">
       <AuthWrapper>
         <header className="w-5xl max-w-full flex items-center justify-between flex-row mx-auto pt-4 ">
           <nav className="flex items-center justify-between w-full">

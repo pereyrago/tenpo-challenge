@@ -20,7 +20,7 @@ Para la obtención de datos, elegí la API pública de [randomuser](https://rand
 
 ## Estructura del proyecto
 
-- `/src/app` — Páginas y layouts de la aplicación (estructura App Router de Next.js)
+- `/src/` — Páginas y layouts de la aplicación (estructura App Router de Next.js)
 - `/src/components` — Componentes reutilizables UI y de negocio
 - `/src/services` — Lógica de acceso a APIs y manejo de errores
 - `/src/schemas` — Esquemas de validación y tipado
