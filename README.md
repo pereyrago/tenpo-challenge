@@ -1,67 +1,81 @@
 # Tenpo Challenge
 
-## ¿Qué es este proyecto?
+Aplicación web (Next.js App Router) desarrollada como parte de un challenge técnico para Tenpo y Tekton Labs. Permite autenticación básica, listado y filtrado de personas y manejo de sesión en cliente.
 
-Este proyecto es una aplicación web desarrollada como parte de un challenge técnico para Tenpo y Tekton Labs. Permite la gestión y visualización de personas, autenticación de usuarios y manejo de sesiones, implementando buenas prácticas de arquitectura y desarrollo frontend moderno.
+## Tecnologías
 
-Para la obtención de datos, elegí la API pública de [randomuser](https://randomuser.me/) ya que cumplía con el requisito de poder mandar +2000 registros.
+- Next.js 15 (App Router) y React 19
+- TypeScript, Zod (validación)
+- Zustand (estado global, persistencia en localStorage)
+- Axios (HTTP), Tailwind CSS 4
+- Jest + Testing Library (tests)
+- ESLint (flat config) + Prettier
 
-## Tecnologías principales
+## Scripts
 
-- **Next.js** (App Router)
-- **React** (componentes funcionales, hooks)
-- **TypeScript** (tipado estático)
-- **Zustand** (manejo de estado global)
-- **Axios** (peticiones HTTP)
-- **ESLint** (linter)
-- **PostCSS** (procesamiento de CSS)
-- **Tailwindcss** (framework de CSS)
-- **pnpm** (gestor de paquetes)
-
-## Estructura del proyecto
-
-- `/src/` — Páginas y layouts de la aplicación (estructura App Router de Next.js)
-- `/src/components` — Componentes reutilizables UI y de negocio
-- `/src/services` — Lógica de acceso a APIs y manejo de errores
-- `/src/schemas` — Esquemas de validación y tipado
-- `/src/store` — Estado global (Zustand)
-- `/src/context` — Contextos globales (ej: autenticación, tema)
-- `/public` — Recursos estáticos (imágenes, íconos)
-- `package.json`, `tsconfig.json`, `eslint.config.mjs` — Configuración de dependencias y herramientas
-
-## Patrones y arquitectura
-
-- **Separación de responsabilidades**: UI, lógica de negocio, servicios y estado están desacoplados.
-- **Patrón Container/Presentational**: Componentes de negocio y UI diferenciados.
-- **Manejo centralizado de errores**: Clases de error personalizadas para cada servicio.
-- **Hooks personalizados**: Para acceso a contexto y estado global.
-- **Context API**: Para temas globales como autenticación y tema visual.
-- **Persistencia de estado**: Uso de localStorage y persistencia con Zustand.
-
-## Cómo levantar el proyecto
-
-1. Instalar dependencias:
-   ```sh
-   pnpm install
-   ```
-2. Iniciar el servidor de desarrollo:
-   ```sh
-   pnpm dev
-   ```
-3. Acceder a la app en `http://localhost:3000`
+- `pnpm install`: instala dependencias
+- `pnpm dev`: entorno de desarrollo
+- `pnpm build`: build de producción
+- `pnpm start`: sirve el build
+- `pnpm lint`: ejecuta ESLint sobre el repo
+- `pnpm test`: corre los tests
 
 ## Variables de entorno
 
-El proyecto requiere 3 variables de entorno para ejecutarse correctamente.
-Puedes encontrarlas en el archivo `.env.example` en la raíz del proyecto. Solo debes crear un archivo `.env` y copiarlas allí.
+Definir en `.env` (ver `.env.example`):
 
-## Notas adicionales
+- `SESSION_SECRET`: clave para firmar/verificar JWT del login API.
+- `EXTERNAL_API_URL`: URL base del proveedor de personas (p.ej. `https://randomuser.me/`).
+- `REQUEST_SEED`: seed usado para resultados deterministas en la API externa.
 
-- El proyecto utiliza rutas públicas y privadas. Las privadas requieren autenticación (token en localStorage).
-- El tema visual (light/dark/system) se gestiona y persiste automáticamente.
-- El código está tipado y validado con TypeScript y ESLint.
-- Se agregó como adicional tests para el componente Login los mismos se pueden ejecutar corriendo el comando `pnpm jest`
+## Estructura
 
-## Contacto
+- `src/app`: páginas, layouts, API routes (`/api/*`) y `not-found.tsx`.
+- `src/components`: UI reusables y componentes de negocio.
+- `src/context`: `AuthWrapper` (privadas), `GuestWrapper` (bloquea Home/Login a usuarios autenticados) y `ThemeProvider`.
+- `src/services`: capa de acceso HTTP (`api.ts`, `log-in.ts`, `persons.ts`).
+- `src/store`: estado global de sesión y datos (`session.ts`).
+- `src/schemas`: tipos/validaciones (Zod, TS).
+- `src/constants`: rutas públicas/privadas y paths de API.
 
-Para dudas técnicas, contactarme [Gabriel Pereyra](https://www.linkedin.com/in/gabi-pereyra/)
+## Arquitectura y decisiones
+
+- Separación de capas (UI/negocio/servicios/estado).
+- Persistencia de sesión en `localStorage` bajo `session-store`.
+- Interceptor Axios añade `Authorization` si hay token (solo en cliente).
+- Guards de sesión:
+  - `AuthWrapper` redirige a Login si no hay sesión.
+  - `GuestWrapper` redirige a lista si ya hay sesión.
+- Manejo de errores tipado por servicio (`LoginError`, `PersonsError`).
+- Logout automático si un servicio devuelve `498` (expiración) al consultar personas.
+
+## Cómo correr
+
+1) `pnpm install`
+2) `pnpm dev`
+3) Abrir `http://localhost:3000`
+
+## Accesibilidad
+
+- Formularios con `aria-label` y región de estado con `aria-live` para errores.
+- Botones icónicos incluyen `aria-label` en controles de paginación.
+
+## Mejoras ya aplicadas
+
+- Página 404 (`src/app/not-found.tsx`).
+- ESLint unificado a flat config (`eslint.config.mjs`).
+- Navegación desde componentes (no desde el store) y guards de sesión.
+- Manejo de `response.ok` en API interna de `persons` y robustez SSR/cliente en `axios`.
+
+## Propuesta de mejora (teórica) para hacer más eficientes las llamadas al backend
+
+Objetivo: reducir ancho de banda, latencia percibida y carga en backend sin cambiar UX.
+
+- Paginación real en servidor: responder solo 20–50 ítems por página (ideal con cursores) en lugar de 2000.
+- Cache HTTP + revalidación: usar `Cache-Control: s-maxage` y `stale-while-revalidate` en `src/app/api/persons/route.ts` para cache en edge y revalidación en segundo plano.
+- ETag/If-None-Match: devolver `304 Not Modified` cuando corresponda para ahorrar transferencia.
+- Búsqueda/filtrado en servidor: exponer `?q=` para filtrar en backend y enviar menos datos cuando se busca por email.
+- Selección mínima de campos: mantener `inc=` con solo los campos usados por la UI.
+- Centralizar expiración de sesión: manejar status `498` en un interceptor global de respuestas de Axios y ejecutar `logout` una sola vez.
+- Retries con backoff y circuit breaker: reintentos exponenciales para fallas transitorias y protección ante errores persistentes.
+
