@@ -10,7 +10,7 @@ import { persist } from "zustand/middleware";
 
 interface SessionState {
   login: (payload: LoginResponse) => void;
-  logout: () => void;
+  logout: () => Promise<void>;
   token: string | null;
   role: Role;
   email?: string;
@@ -26,19 +26,10 @@ const useSession = create<SessionState>()(
       email: undefined,
       login: ({ token, role, email }) => {
         set({ token, role, email });
-        if (typeof window !== "undefined") {
-          window.location.assign(PATHS.LIST);
-        }
-        return;
       },
-      logout: () => {
-        api.get("/logout").then(() => {
-          set({ token: null, role: "guest", email: undefined, persons: null });
-          if (typeof window !== "undefined") {
-            window.location.assign("/");
-          }
-          return;
-        });
+      logout: async () => {
+        await api.get("/logout");
+        set({ token: null, role: "guest", email: undefined, persons: null });
       },
       persons: null,
       fetchPersons: async (page: number) => {
